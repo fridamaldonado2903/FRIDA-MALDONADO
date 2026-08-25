@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de Trabajo 100 Días — Frida Maldonado</title>
+<style>
+  :root{
+    --blue-900:#123A63;
+    --blue-700:#1F4E78;
+    --blue-500:#2E75B6;
+    --blue-300:#9DC3E6;
+    --blue-100:#EAF2FA;
+    --ink:#1C2733;
+    --ink-soft:#5B6774;
+    --line:#E4E9EF;
+    --white:#FFFFFF;
+    --red:#E4626F;
+    --amber:#F0B429;
+    --green:#4CAF7D;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--white);
+    color:var(--ink);
+    font-family:"Segoe UI", Arial, Helvetica, sans-serif;
+    padding:32px 24px 64px;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; }
+
+  /* ---------- Header ---------- */
+  header{ margin-bottom:28px; }
+  .eyebrow{
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--blue-500); font-weight:700; margin:0 0 6px;
+  }
+  h1{
+    margin:0; font-size:28px; font-weight:800; color:var(--blue-900);
+    letter-spacing:-0.01em;
+  }
+  .subtitle{ margin:6px 0 0; color:var(--ink-soft); font-size:14.5px; }
+
+  /* ---------- Overall progress panel ---------- */
+  .overview{
+    display:grid;
+    grid-template-columns: 200px 1fr;
+    gap:28px;
+    align-items:center;
+    background:var(--blue-100);
+    border:1px solid var(--blue-300);
+    border-radius:14px;
+    padding:22px 26px;
+    margin:26px 0 30px;
+  }
+  .overview-number{ text-align:left; }
+  .overview-number .big{
+    font-size:46px; font-weight:800; color:var(--blue-700); line-height:1;
+    font-variant-numeric: tabular-nums;
+  }
+  .overview-number .label{
+    font-size:12px; color:var(--ink-soft); margin-top:6px; font-weight:600;
+    text-transform:uppercase; letter-spacing:.06em;
+  }
+
+  .timeline{ width:100%; }
+  .timeline-top{
+    display:flex; justify-content:space-between; margin-bottom:8px;
+    font-size:11.5px; color:var(--blue-700); font-weight:700;
+  }
+  .phase-track{
+    display:flex; width:100%; height:20px; border-radius:10px; overflow:hidden;
+    border:1px solid var(--blue-300); position:relative; background:var(--white);
+  }
+  .phase-seg{
+    position:relative; height:100%; display:flex; align-items:center; justify-content:center;
+    font-size:10px; font-weight:700; color:var(--blue-900); opacity:.55;
+    border-right:1px solid var(--white);
+  }
+  .phase-seg:last-child{ border-right:none; }
+  .p1{ background:var(--blue-300); flex:0 0 30%; }
+  .p2{ background:#B9DDB0; flex:0 0 30%; }
+  .p3{ background:#F7D780; flex:0 0 40%; }
+
+  .progress-fill{
+    position:absolute; top:0; left:0; height:100%;
+    background:linear-gradient(90deg, var(--blue-700), var(--blue-500));
+    border-radius:10px 0 0 10px;
+    transition: width .35s ease;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
+  }
+  .day-labels{
+    display:flex; justify-content:space-between; margin-top:6px;
+    font-size:10.5px; color:var(--ink-soft);
+  }
+
+  /* ---------- Phase sections ---------- */
+  .phase-section{ margin-top:38px; }
+  .phase-head{
+    display:flex; align-items:center; gap:12px; margin-bottom:12px;
+  }
+  .phase-dot{ width:12px; height:12px; border-radius:50%; flex:none; }
+  .dot-1{ background:var(--blue-500); }
+  .dot-2{ background:#5FAE52; }
+  .dot-3{ background:#D9A200; }
+  .phase-head h2{
+    font-size:16px; margin:0; color:var(--blue-900); font-weight:800;
+  }
+  .phase-head .range{
+    font-size:12px; color:var(--ink-soft); font-weight:600;
+    background:var(--blue-100); border:1px solid var(--blue-300);
+    padding:2px 10px; border-radius:999px;
+  }
+  .phase-avg{
+    margin-left:auto; font-size:12.5px; color:var(--blue-700); font-weight:700;
+  }
+
+  table{
+    width:100%; border-collapse:collapse; border:1px solid var(--line);
+    border-radius:10px; overflow:hidden;
+  }
+  thead th{
+    background:var(--blue-700); color:#fff; text-align:left;
+    font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    padding:10px 12px; font-weight:700;
+  }
+  tbody td{
+    padding:11px 12px; border-top:1px solid var(--line);
+    font-size:13px; vertical-align:middle; color:var(--ink);
+  }
+  tbody tr:nth-child(even){ background:#FAFBFD; }
+  tbody tr:hover{ background:var(--blue-100); }
+
+  td.col-actividad{ min-width:220px; font-weight:600; }
+  td.col-entregable{ color:var(--ink-soft); min-width:170px; }
+  td.col-notas{ color:var(--ink-soft); font-size:12px; min-width:150px; }
+
+  select.status-select{
+    font-family:inherit; font-size:12.5px; font-weight:700;
+    padding:6px 10px; border-radius:999px; border:1px solid transparent;
+    cursor:pointer; outline:none; appearance:none; -webkit-appearance:none;
+    background-repeat:no-repeat; background-position:right 8px center; background-size:10px;
+    padding-right:26px;
+  }
+  .status-No{ background:#FDEAEC; color:var(--red); border-color:#F3C6CB; }
+  .status-En{ background:#FFF6E1; color:#B27A00; border-color:#F3DFA5; }
+  .status-Completado{ background:#E9F7EF; color:#2E8B57; border-color:#BFE6CE; }
+
+  .avance-cell{ min-width:140px; }
+  .avance-row{ display:flex; align-items:center; gap:8px; }
+  input[type="range"]{
+    flex:1; accent-color:var(--blue-500); height:4px; cursor:pointer;
+  }
+  input[type="number"].pct-input{
+    width:52px; font-family:inherit; font-size:12.5px; font-weight:700;
+    border:1px solid var(--line); border-radius:6px; padding:4px 6px;
+    text-align:center; color:var(--blue-700);
+  }
+  input[type="number"].pct-input:focus, select.status-select:focus{
+    outline:2px solid var(--blue-500); outline-offset:1px;
+  }
+
+  footer{
+    margin-top:40px; padding-top:16px; border-top:1px solid var(--line);
+    font-size:11.5px; color:var(--ink-soft);
+  }
+
+  /* ---------- Editable fields ---------- */
+  [contenteditable="true"]{
+    border-radius:6px; transition: background .15s ease, box-shadow .15s ease;
+    cursor:text;
+  }
+  [contenteditable="true"]:hover{
+    background:var(--blue-100);
+  }
+  [contenteditable="true"]:focus{
+    outline:none; background:var(--blue-100);
+    box-shadow: 0 0 0 2px var(--blue-500);
+  }
+  h1[contenteditable="true"], .eyebrow[contenteditable="true"], .subtitle[contenteditable="true"]{
+    padding:2px 6px; margin-left:-6px; display:inline-block;
+  }
+
+  input.text-input{
+    width:100%; font-family:inherit; font-size:13px; color:var(--ink);
+    border:1px solid transparent; border-radius:6px; padding:6px 8px;
+    background:transparent;
+  }
+  input.text-input:hover{ background:var(--blue-100); border-color:var(--blue-300); }
+  input.text-input:focus{
+    outline:none; background:#fff; border-color:var(--blue-500);
+    box-shadow:0 0 0 2px var(--blue-100);
+  }
+  input.notas-input::placeholder, input.resp-input::placeholder{ color:#B7C1CC; }
+
+  @media (max-width:720px){
+    .overview{ grid-template-columns:1fr; }
+    table, thead, tbody, th, td, tr{ display:block; }
+    thead{ display:none; }
+    tbody tr{ border:1px solid var(--line); border-radius:10px; margin-bottom:10px; padding:8px 4px; }
+    tbody td{ border-top:none; padding:6px 12px; }
+    tbody td::before{
+      content: attr(data-label); display:block; font-size:10px; font-weight:700;
+      color:var(--blue-500); text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow" contenteditable="true" spellcheck="false">AP LATAM · Especialista de Administración de Personal</p>
+    <h1 contenteditable="true" spellcheck="false">Plan de Trabajo 100 Días — Frida Maldonado</h1>
+    <p class="subtitle" contenteditable="true" spellcheck="false">Seguimiento en vivo de las 3 fases. Cambia el Estatus o el % Avance de cualquier actividad y el resto se actualiza automáticamente.</p>
+  </header>
+
+  <section class="overview">
+    <div class="overview-number">
+      <div class="big" id="overallPct">0%</div>
+      <div class="label">Avance general</div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-top">
+        <span>Día 1</span>
+        <span>Día 100</span>
+      </div>
+      <div class="phase-track">
+        <div class="progress-fill" id="progressFill" style="width:0%;"></div>
+        <div class="phase-seg p1">Fase 1</div>
+        <div class="phase-seg p2">Fase 2</div>
+        <div class="phase-seg p3">Fase 3</div>
+      </div>
+      <div class="day-labels">
+        <span>Días 1–30 · Diagnóstico</span>
+        <span>Días 31–60 · Construcción</span>
+        <span>Días 61–100 · Implementación</span>
+      </div>
+    </div>
+  </section>
+
+  <div id="phasesContainer"></div>
+
+  <footer>
+    Basado en el Informe de Alineación Profesional AP LATAM · Candidata: Frida Maldonado. El % Avance y el Estatus de cada actividad están sincronizados entre sí.
+  </footer>
+
+</div>
+
+<script>
+const PHASES = [
+  {
+    id: "f1",
+    title: "Fase 1 — Diagnóstico y credibilidad rápida",
+    range: "Días 1–30",
+    dotClass: "dot-1",
+    items: [
+      { actividad:"Auditar expedientes, contratos, incidencias e ingresos/egresos por país", entregable:"Diagnóstico documentado", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Mapear sistemas HRIS actuales vs. experiencia previa en SAP y Kronos", entregable:"Comparativo de sistemas", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Reunirse con líderes/legales locales en Colombia, Chile y Perú", entregable:"Minuta de reuniones", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Iniciar matriz comparada de legislación laboral (México vs. LATAM)", entregable:"Matriz v1 (borrador)", estatus:"No iniciado", avance:0, resp:"Frida", notas:"Entregable ancla del plan" },
+      { actividad:"Quick win: detectar ineficiencia operativa aplicando experiencia previa de optimización", entregable:"Propuesta de ahorro/mejora", estatus:"No iniciado", avance:0, resp:"Frida", notas:"Ref: ahorro de $500,000 MXN" },
+    ]
+  },
+  {
+    id: "f2",
+    title: "Fase 2 — Construcción de la matriz regional y estandarización",
+    range: "Días 31–60",
+    dotClass: "dot-2",
+    items: [
+      { actividad:"Finalizar matriz de legislación laboral comparada", entregable:"Matriz v2 (documento vivo)", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Diseñar propuesta de onboarding/offboarding 100% remoto regional", entregable:"Propuesta de flujo remoto", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Iniciar curso de automatización de reportes en Excel (KPIs rotación/ausentismo)", entregable:"Certificado / avance de curso", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Establecer canal directo con jurídico/RL de cada país para validar matriz", entregable:"Canal formalizado", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+    ]
+  },
+  {
+    id: "f3",
+    title: "Fase 3 — Implementación y posicionamiento como referente",
+    range: "Días 61–100",
+    dotClass: "dot-3",
+    items: [
+      { actividad:"Piloto de onboarding remoto rediseñado en un país fuera de México", entregable:"Reporte de piloto", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Presentar matriz y flujo optimizado a liderazgo con métricas de impacto", entregable:"Presentación ejecutiva", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Documentar protocolo estandarizado de incidencias/disciplinarios multi-país", entregable:"Protocolo documentado", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+      { actividad:"Iniciar mentoría/transferencia de conocimiento al equipo", entregable:"Plan de mentoría", estatus:"No iniciado", avance:0, resp:"Frida", notas:"" },
+    ]
+  }
+];
+
+const phasesContainer = document.getElementById("phasesContainer");
+const overallPctEl = document.getElementById("overallPct");
+const progressFillEl = document.getElementById("progressFill");
+
+function statusClass(status){
+  if(status === "Completado") return "status-Completado";
+  if(status === "En progreso") return "status-En";
+  return "status-No";
+}
+
+function buildPhaseTable(phase){
+  const section = document.createElement("section");
+  section.className = "phase-section";
+
+  const head = document.createElement("div");
+  head.className = "phase-head";
+  head.innerHTML = `
+    <span class="phase-dot ${phase.dotClass}"></span>
+    <h2>${phase.title}</h2>
+    <span class="range">${phase.range}</span>
+    <span class="phase-avg" data-phase-avg="${phase.id}">0% de avance en esta fase</span>
+  `;
+  section.appendChild(head);
+
+  const table = document.createElement("table");
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th style="width:26%;">Actividad</th>
+        <th style="width:18%;">Entregable</th>
+        <th style="width:14%;">Estatus</th>
+        <th style="width:16%;">% Avance</th>
+        <th style="width:10%;">Responsable</th>
+        <th style="width:16%;">Notas</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector("tbody");
+
+  phase.items.forEach((item, idx) => {
+    const tr = document.createElement("tr");
+
+    const tdAct = document.createElement("td");
+    tdAct.className = "col-actividad";
+    tdAct.setAttribute("data-label","Actividad");
+    tdAct.textContent = item.actividad;
+
+    const tdEnt = document.createElement("td");
+    tdEnt.className = "col-entregable";
+    tdEnt.setAttribute("data-label","Entregable");
+    tdEnt.textContent = item.entregable;
+
+    const tdStatus = document.createElement("td");
+    tdStatus.setAttribute("data-label","Estatus");
+    const select = document.createElement("select");
+    select.className = "status-select " + statusClass(item.estatus);
+    ["No iniciado","En progreso","Completado"].forEach(opt=>{
+      const o = document.createElement("option");
+      o.value = opt; o.textContent = opt;
+      if(opt === item.estatus) o.selected = true;
+      select.appendChild(o);
+    });
+    tdStatus.appendChild(select);
+
+    const tdAvance = document.createElement("td");
+    tdAvance.className = "avance-cell";
+    tdAvance.setAttribute("data-label","% Avance");
+    const rowWrap = document.createElement("div");
+    rowWrap.className = "avance-row";
+    const range = document.createElement("input");
+    range.type = "range"; range.min = 0; range.max = 100; range.step = 5;
+    range.value = item.avance;
+    const num = document.createElement("input");
+    num.type = "number"; num.className = "pct-input";
+    num.min = 0; num.max = 100; num.value = item.avance;
+    rowWrap.appendChild(range);
+    rowWrap.appendChild(num);
+    tdAvance.appendChild(rowWrap);
+
+    const tdResp = document.createElement("td");
+    tdResp.setAttribute("data-label","Responsable");
+    const respInput = document.createElement("input");
+    respInput.type = "text";
+    respInput.className = "text-input resp-input";
+    respInput.value = item.resp;
+    respInput.placeholder = "Nombre";
+    respInput.addEventListener("input", () => { item.resp = respInput.value; });
+    tdResp.appendChild(respInput);
+
+    const tdNotas = document.createElement("td");
+    tdNotas.className = "col-notas";
+    tdNotas.setAttribute("data-label","Notas");
+    const notasInput = document.createElement("input");
+    notasInput.type = "text";
+    notasInput.className = "text-input notas-input";
+    notasInput.value = item.notas;
+    notasInput.placeholder = "Agregar nota…";
+    notasInput.addEventListener("input", () => { item.notas = notasInput.value; });
+    tdNotas.appendChild(notasInput);
+
+    tr.appendChild(tdAct);
+    tr.appendChild(tdEnt);
+    tr.appendChild(tdStatus);
+    tr.appendChild(tdAvance);
+    tr.appendChild(tdResp);
+    tr.appendChild(tdNotas);
+    tbody.appendChild(tr);
+
+    // ---- sync logic ----
+    function setStatusFromPct(pct){
+      let newStatus;
+      if(pct <= 0) newStatus = "No iniciado";
+      else if(pct >= 100) newStatus = "Completado";
+      else newStatus = "En progreso";
+      item.estatus = newStatus;
+      select.value = newStatus;
+      select.className = "status-select " + statusClass(newStatus);
+    }
+
+    function setPctFromStatus(status){
+      let pct = item.avance;
+      if(status === "No iniciado") pct = 0;
+      else if(status === "Completado") pct = 100;
+      else if(status === "En progreso"){
+        if(pct <= 0 || pct >= 100) pct = 50;
+      }
+      item.avance = pct;
+      range.value = pct;
+      num.value = pct;
+    }
+
+    range.addEventListener("input", () => {
+      let v = clamp(parseInt(range.value || "0", 10));
+      item.avance = v;
+      num.value = v;
+      setStatusFromPct(v);
+      recompute();
+    });
+
+    num.addEventListener("input", () => {
+      let v = clamp(parseInt(num.value || "0", 10));
+      item.avance = v;
+      range.value = v;
+      setStatusFromPct(v);
+      recompute();
+    });
+    num.addEventListener("blur", () => {
+      let v = clamp(parseInt(num.value || "0", 10));
+      num.value = v;
+    });
+
+    select.addEventListener("change", () => {
+      item.estatus = select.value;
+      select.className = "status-select " + statusClass(select.value);
+      setPctFromStatus(select.value);
+      recompute();
+    });
+  });
+
+  section.appendChild(table);
+  phasesContainer.appendChild(section);
+}
+
+function clamp(v){
+  if(isNaN(v)) v = 0;
+  return Math.max(0, Math.min(100, v));
+}
+
+function recompute(){
+  let all = [];
+  PHASES.forEach(phase => {
+    let sum = 0;
+    phase.items.forEach(it => { sum += it.avance; all.push(it.avance); });
+    const avg = phase.items.length ? Math.round(sum / phase.items.length) : 0;
+    const label = document.querySelector(`[data-phase-avg="${phase.id}"]`);
+    if(label) label.textContent = `${avg}% de avance en esta fase`;
+  });
+  const overallAvg = all.length ? Math.round(all.reduce((a,b)=>a+b,0) / all.length) : 0;
+  overallPctEl.textContent = overallAvg + "%";
+  progressFillEl.style.width = overallAvg + "%";
+}
+
+PHASES.forEach(buildPhaseTable);
+recompute();
+</script>
+</body>
+</html>
